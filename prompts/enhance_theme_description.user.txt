@@ -1,0 +1,11 @@
+Enhance this VS Code theme description to be more engaging and descriptive.
+Keep it concise but compelling, under 200 characters.
+
+Theme: {theme_name}
+Current description: {description}
+
+Provide an enhanced description that:
+- Highlights the unique visual characteristics
+- Mentions the target audience or use case
+- Uses vivid but professional language
+- Stays under 200 characters

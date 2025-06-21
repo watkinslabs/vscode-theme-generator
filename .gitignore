@@ -4,3 +4,6 @@
 .gz
 .env
 
+build
+*.log
+logs

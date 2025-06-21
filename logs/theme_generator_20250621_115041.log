@@ -1,3 +1,0 @@
-2025-06-21 11:50:41 - root - WARNING - Prompt generate_theme_colors has user part but missing system part
-2025-06-21 11:50:41 - root - ERROR - Missing required data keys for formatting: {'{ theme_description '}
-2025-06-21 11:50:41 - theme-builder.builder - ERROR - Failed to generate theme from prompt: No response from AI

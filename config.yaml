@@ -4,7 +4,10 @@ generator:
   themes_dir: ./themes
   screenshot_dir: ./screenshots
   temp_dir: ./temp
-  
+  assets_dir: "./assets/builds"
+  releases_dir: "./releases"
+  assets_base_url: "https://github.com/watkinslabs/vscode-theme-generator/assets/builds"  # Or wherever you're hosting
+
 # Theme AI enhancement settings (not the AI Manager config)
 ai:
   enabled: true
@@ -100,15 +103,16 @@ templates:
 # Default theme settings
 defaults:
   version: "1.0.0"
-  publisher: "unknown"
+  publisher: "WatkinsLabs"
   license: "MIT"
   type: "dark"  # dark or light
   
   # Default author info (can be overridden)
   author:
-    name: "Theme Author"
-    email: "author@example.com"
-    
+    name: "Chris Watkins"
+    email: "chris@watkinslabs.com"
+    url: "https://watkinslabs.com"
+  repository: "https://github.com/watkinslabs/vscode-theme-generator" 
   # Default keywords
   keywords:
     - theme

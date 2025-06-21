@@ -24,41 +24,77 @@ class Packager:
         if not self._check_vsce_installed():
             logger.warning("vsce not found. Installing...")
             self._install_vsce()
-            
+
         # Validate theme directory
         if not self._validate_theme_directory(theme_dir):
             raise ValueError(f"Invalid theme directory: {theme_dir}")
-            
-        # Determine output path
-        if not output_path:
-            package_json = json.loads((theme_dir / 'package.json').read_text())
-            name = package_json.get('name', 'theme')
-            version = package_json.get('version', '1.0.0')
-            output_path = theme_dir.parent / f"{name}-{version}.vsix"
-            
-        # Create VSIX
-        logger.info(f"Creating VSIX package: {output_path}")
+
+        # Read package.json to get name and version
+        package_json = json.loads((theme_dir / 'package.json').read_text())
+        name = package_json.get('name', 'theme')
+        version = package_json.get('version', '1.0.0')
         
+        # If no output path specified, just use the filename
+        # vsce will create it in the current directory
+        if not output_path:
+            vsix_filename = f"{name}-{version}.vsix"
+        else:
+            vsix_filename = output_path.name
+
+        # Create VSIX
+        logger.info(f"Creating VSIX package in {theme_dir}")
+        logger.info(f"VSIX filename will be: {vsix_filename}")
+
         try:
-            # Run vsce package command
+            # Create .vscodeignore if it doesn't exist
+            vscodeignore_path = theme_dir / '.vscodeignore'
+            if not vscodeignore_path.exists():
+                vscodeignore_content = """
+    .vscode/**
+    .vscode-test/**
+    src/**
+    .gitignore
+    vsc-extension-quickstart.md
+    **/tsconfig.json
+    **/.eslintrc.json
+    **/*.map
+    **/*.ts
+    """
+                vscodeignore_path.write_text(vscodeignore_content.strip())
+                logger.info(f"Created .vscodeignore file")
+
+            # Run vsce package command WITHOUT --out flag first to see default behavior
+            # Or use just the filename without path
             result = subprocess.run(
-                ['vsce', 'package', '--out', str(output_path)],
+                ['vsce', 'package', '--out', vsix_filename],
                 cwd=theme_dir,
                 capture_output=True,
                 text=True
             )
-            
+
             if result.returncode != 0:
                 logger.error(f"vsce package failed: {result.stderr}")
                 raise RuntimeError(f"Failed to create VSIX: {result.stderr}")
-                
-            logger.info(f"Successfully created VSIX: {output_path}")
-            return output_path
+
+            # The VSIX should be created in theme_dir
+            created_vsix = theme_dir / vsix_filename
             
+            if not created_vsix.exists():
+                # Try to find any .vsix file that was created
+                vsix_files = list(theme_dir.glob("*.vsix"))
+                if vsix_files:
+                    created_vsix = vsix_files[0]
+                    logger.info(f"Found VSIX at: {created_vsix}")
+                else:
+                    raise RuntimeError(f"VSIX file not found after packaging")
+
+            logger.info(f"Successfully created VSIX: {created_vsix}")
+            return created_vsix
+
         except Exception as e:
             logger.error(f"Error creating VSIX: {e}")
             raise
-            
+                
     def _check_vsce_installed(self) -> bool:
         """Check if vsce is installed"""
         try:

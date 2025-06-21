@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6074c9bae64a3aa30600c7ce8f63cba4b77ba846846bfd3c3cb8ede3b7427b32"
+            "sha256": "fc276a935e4cca5e01ef073c9d31cb683fe23645bf7d4bc90ebfab1e0aaac756"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1094,20 +1094,20 @@
         },
         "wl-ai-manager": {
             "hashes": [
-                "sha256:563f11ed3f4d9ad02954fafc629dfab20cfda385c7257b7804e5f9b73689677e",
-                "sha256:9756cea04540605c75cbc9508c4f9ff437b0755b2efa67dc6d066959a01f6643"
+                "sha256:1da724cef0913baab02664513a07969cac62318151b9e3b95ec4eaa6ed883b04",
+                "sha256:d0e6db6933cb306dce84a699ae9848a579cbb4ee25ceec15af7c8f40d7f0f244"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==0.1.32"
+            "version": "==0.1.37"
         },
         "wl-config-manager": {
             "hashes": [
-                "sha256:0b80c7f24b7291251181493b16c56cbb23b5b99afa2614a3dfa17a1b707cfea0"
+                "sha256:4ffce9d37b2d34add38e71b96bf7b775d76fd49c1724aaa82a791506fd7963ac"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.6'",
-            "version": "==0.1.23"
+            "version": "==0.1.43"
         },
         "wsproto": {
             "hashes": [

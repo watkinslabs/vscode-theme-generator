@@ -2,6 +2,14 @@
 
 {{ description }}
 
+## Screenshots
+
+{% if assets_base_url %}
+![Theme Preview]({{ assets_base_url }}/{{ name }}.png)
+{% else %}
+![Theme Preview](images/screenshot.png)
+{% endif %}
+
 ## Features
 
 {% if features %}
@@ -36,15 +44,7 @@
 7. Open the Command Palette and run `Preferences: Color Theme`
 8. Select `{{ display_name }}`
 
-## Screenshots
 
-{% if screenshots %}
-{% for screenshot in screenshots %}
-![{{ screenshot.caption }}]({{ screenshot.path }})
-{% endfor %}
-{% else %}
-*Screenshots coming soon!*
-{% endif %}
 
 ## Recommended Settings
 

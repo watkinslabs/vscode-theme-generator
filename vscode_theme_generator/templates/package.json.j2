@@ -1,0 +1,50 @@
+{
+  "name": "{{ name }}",
+  "displayName": "{{ display_name }}",
+  "description": "{{ description }}",
+  "version": "{{ version }}",
+  "publisher": "{{ publisher }}",
+  "author": {
+    "name": "{{ author.name }}",
+    "email": "{{ author.email }}"{% if author.url %},
+    "url": "{{ author.url }}"{% endif %}
+  },
+  {% if icon %}"icon": "images/icon.png",{% endif %}
+  {% if homepage %}"homepage": "{{ homepage }}",{% endif %}
+  {% if bugs %}"bugs": {
+    "url": "{{ bugs }}"
+  },{% endif %}
+  
+  "license": "{{ license | default('MIT') }}",
+  "engines": {
+    "vscode": "{{ engines_version }}"
+  },
+  "categories": ["Themes"],
+  "keywords": {{ keywords | jsonify }},
+  {% if repository %}"repository": {
+    "type": "git",
+    "url": "{{ repository }}"
+  },{% endif %}
+  {% if galleryBanner %}"galleryBanner": {
+    "color": "{{ galleryBanner.color }}",
+    "theme": "{{ galleryBanner.theme }}"
+  },{% endif %}
+  "contributes": {
+    "themes": [
+      {
+        "label": "{{ display_name }}",
+        "uiTheme": "vs-dark",
+        "path": "./themes/{{ theme_file }}"
+      }
+    ]
+  },
+  "scripts": {
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "__metadata": {
+    "id": "{{ name }}-theme-{{ publisher }}",
+    "publisherDisplayName": "{{ author.name }}",
+    "publisherId": "{{ publisher }}"
+  }
+}

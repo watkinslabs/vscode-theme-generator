@@ -14,6 +14,8 @@ DEFAULT_THEMES_DIR = Path("./themes")
 DEFAULT_TEMPLATES_DIR = Path(__file__).parent / "templates"
 DEFAULT_TEMP_DIR = Path("./temp")
 DEFAULT_SCREENSHOTS_DIR = Path("./screenshots")
+DEFAULT_ASSETS_DIR = Path("./assets/builds")
+DEFAULT_RELEASES_DIR = Path("./releases")
 
 # File patterns
 THEME_FILE_PATTERN = "*.yaml"
@@ -246,3 +248,4 @@ fn main() {
 """
     }
 }
+

@@ -1,0 +1,18 @@
+Review these VS Code theme colors and suggest optimizations.
+
+Current colors:
+{colors}
+
+Analyze for:
+1. Contrast ratios (WCAG compliance)
+2. Color harmony
+3. Eye strain reduction
+4. Consistency across UI elements
+
+Return a Python dictionary with any color changes needed. Example:
+{
+    "editor.background": "#1a1a1a",
+    "editor.foreground": "#e0e0e0"
+}
+
+Only include colors that need to be changed.

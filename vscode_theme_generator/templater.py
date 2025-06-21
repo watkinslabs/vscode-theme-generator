@@ -14,10 +14,10 @@ logger = logging.getLogger(__name__)
 
 class Templater:
     """Handles template rendering for theme files"""
-    
+
     def __init__(self, config):
         self.config = config
-        
+
         # Setup Jinja2 environment
         template_dir = Path(config.get('templates.directory', DEFAULT_TEMPLATES_DIR))
         self.env = Environment(
@@ -26,19 +26,37 @@ class Templater:
             trim_blocks=True,
             lstrip_blocks=True
         )
-        
+
         # Add custom filters
         self.env.filters['jsonify'] = lambda x: json.dumps(x, indent=2)
         self.env.filters['jsonify_compact'] = lambda x: json.dumps(x)
-        
+
+    def _strip_quotes(self, data: Any) -> Any:
+        """Recursively strip double quotes from string values in data structures"""
+        if isinstance(data, str):
+            # Strip leading and trailing double quotes
+            return data.strip('"')
+        elif isinstance(data, dict):
+            # Recursively process dictionary
+            return {key: self._strip_quotes(value) for key, value in data.items()}
+        elif isinstance(data, list):
+            # Recursively process list
+            return [self._strip_quotes(item) for item in data]
+        elif isinstance(data, tuple):
+            # Recursively process tuple (return as tuple)
+            return tuple(self._strip_quotes(item) for item in data)
+        else:
+            # Return other types as-is (int, float, bool, None, etc.)
+            return data
+
     def generate_theme_files(self, theme_def: Dict[str, Any], output_dir: Path):
         """Generate all theme files from templates"""
         theme_data = theme_def.get('theme', theme_def)
-        
+
         # Ensure required directories exist
         (output_dir / "themes").mkdir(parents=True, exist_ok=True)
         (output_dir / ".vscode").mkdir(exist_ok=True)
-        
+
         # Generate each file
         self._generate_package_json(theme_data, output_dir)
         self._generate_theme_json(theme_data, output_dir)
@@ -47,11 +65,17 @@ class Templater:
         self._generate_license(theme_data, output_dir)
         self._generate_vscode_launch(theme_data, output_dir)
         self._generate_quickstart(theme_data, output_dir)
-        
+
     def _generate_package_json(self, theme_data: Dict[str, Any], output_dir: Path):
         """Generate package.json"""
         template = self.env.get_template('package.json.j2')
+
+        # Check if icon.png exists in the images directory
+        icon_path = output_dir / 'images' / 'icon.png'
+        has_icon = icon_path.exists()
         
+        logger.info(f"Checking for icon at {icon_path}: {has_icon}")
+
         # Prepare context
         context = {
             'name': theme_data['name'].replace('_', '-'),
@@ -66,20 +90,28 @@ class Templater:
             'keywords': theme_data.get('keywords', ['theme', 'color-theme']),
             'engines_version': VSCODE_ENGINES_VERSION,
             'repository': theme_data.get('repository', ''),
-            'icon': 'images/icon.png' if (output_dir / 'images' / 'icon.png').exists() else '',
-            'theme_file': f"{theme_data['name']}-color-theme.json"
+            'icon': 'images/icon.png' if has_icon else '',  # Set icon path if it exists
+            'theme_file': f"{theme_data['name']}-color-theme.json",
+            'license': theme_data.get('license', 'MIT'),
+            'homepage': theme_data.get('homepage', ''),
+            'bugs': theme_data.get('bugs', ''),
+            'galleryBanner': theme_data.get('galleryBanner', {})
         }
-        
+
+        # Strip quotes from all string values
+        context = self._strip_quotes(context)
+
         # Render and save
         content = template.render(**context)
         package_path = output_dir / 'package.json'
         package_path.write_text(content)
+        logger.info(f"Generated package.json with icon: {has_icon}")
         logger.debug(f"Generated: {package_path}")
-        
+
     def _generate_theme_json(self, theme_data: Dict[str, Any], output_dir: Path):
         """Generate the actual theme JSON file"""
         template = self.env.get_template('theme.json.j2')
-        
+
         # Prepare context
         context = {
             'name': theme_data.get('display_name', theme_data['name']),
@@ -87,19 +119,23 @@ class Templater:
             'colors': theme_data.get('colors', {}),
             'token_colors': theme_data.get('token_colors', [])
         }
-        
+
+        # Strip quotes from all string values
+        context = self._strip_quotes(context)
+
         # Render and save
         content = template.render(**context)
         theme_path = output_dir / 'themes' / f"{theme_data['name']}-color-theme.json"
         theme_path.write_text(content)
         logger.debug(f"Generated: {theme_path}")
-        
+
     def _generate_readme(self, theme_data: Dict[str, Any], output_dir: Path):
         """Generate README.md"""
         template = self.env.get_template('README.md.j2')
-        
+
         # Prepare context
         context = {
+            'name': theme_data['name'],  # Add the theme name
             'display_name': theme_data.get('display_name', theme_data['name']),
             'description': theme_data.get('description', 'A custom VS Code theme'),
             'author': theme_data.get('author', {}),
@@ -108,48 +144,62 @@ class Templater:
             'installation': theme_data.get('installation', {}),
             'repository': theme_data.get('repository', ''),
             'license': theme_data.get('license', 'MIT'),
+            'assets_base_url': self.config.get('generator.assets_base_url', '')  # Add base URL
         }
-        
+
+        # Strip quotes from all string values
+        context = self._strip_quotes(context)
+
         # Render and save
         content = template.render(**context)
         readme_path = output_dir / 'README.md'
         readme_path.write_text(content)
         logger.debug(f"Generated: {readme_path}")
-        
+
     def _generate_changelog(self, theme_data: Dict[str, Any], output_dir: Path):
         """Generate CHANGELOG.md"""
         template = self.env.get_template('CHANGELOG.md.j2')
-        
+
         # Prepare context
         context = {
             'version': theme_data.get('version', '1.0.0'),
             'name': theme_data['name'],
-            'changes': theme_data.get('changelog', [])
+            'display_name': theme_data.get('display_name', theme_data['name']),
+            'changes': theme_data.get('changelog', []),
+            'date': theme_data.get('date', 'YYYY-MM-DD'),
+            'repository': theme_data.get('repository', '')
         }
-        
+
+        # Strip quotes from all string values
+        context = self._strip_quotes(context)
+
         # Render and save
         content = template.render(**context)
         changelog_path = output_dir / 'CHANGELOG.md'
         changelog_path.write_text(content)
         logger.debug(f"Generated: {changelog_path}")
-        
+
     def _generate_license(self, theme_data: Dict[str, Any], output_dir: Path):
         """Generate LICENSE file"""
         template = self.env.get_template('LICENSE.j2')
-        
+
         # Prepare context
+        from datetime import datetime
         context = {
-            'year': theme_data.get('year', '2024'),
+            'year': theme_data.get('year', str(datetime.now().year)),
             'author': theme_data.get('author', {}).get('name', 'Unknown'),
             'license_type': theme_data.get('license', 'MIT')
         }
-        
+
+        # Strip quotes from all string values
+        context = self._strip_quotes(context)
+
         # Render and save
         content = template.render(**context)
         license_path = output_dir / 'LICENSE'
         license_path.write_text(content)
         logger.debug(f"Generated: {license_path}")
-        
+
     def _generate_vscode_launch(self, theme_data: Dict[str, Any], output_dir: Path):
         """Generate .vscode/launch.json for testing"""
         launch_config = {
@@ -165,37 +215,40 @@ class Templater:
                 }
             ]
         }
-        
+
         launch_path = output_dir / '.vscode' / 'launch.json'
         launch_path.write_text(json.dumps(launch_config, indent=2))
         logger.debug(f"Generated: {launch_path}")
-        
+
     def _generate_quickstart(self, theme_data: Dict[str, Any], output_dir: Path):
         """Generate vsc-extension-quickstart.md"""
         template = self.env.get_template('quickstart.md.j2')
-        
+
         # Prepare context
         context = {
             'name': theme_data['name'],
             'display_name': theme_data.get('display_name', theme_data['name'])
         }
-        
+
+        # Strip quotes from all string values
+        context = self._strip_quotes(context)
+
         # Render and save
         content = template.render(**context)
         quickstart_path = output_dir / 'vsc-extension-quickstart.md'
         quickstart_path.write_text(content)
         logger.debug(f"Generated: {quickstart_path}")
-        
+
     def _get_screenshots(self, output_dir: Path) -> list:
         """Get list of screenshot files"""
         screenshots = []
         images_dir = output_dir / 'images'
-        
+
         if images_dir.exists():
             for img_file in images_dir.glob('screenshot*.png'):
                 screenshots.append({
                     'path': f'images/{img_file.name}',
                     'caption': f'Theme Preview {len(screenshots) + 1}'
                 })
-                
+
         return screenshots

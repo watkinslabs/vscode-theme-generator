@@ -6,6 +6,7 @@ VS Code Theme Generator CLI
 import argparse
 import sys
 import logging
+import yaml
 from pathlib import Path
 from termcolor import colored
 from tqdm import tqdm
@@ -28,6 +29,7 @@ Examples:
   %(prog)s create my-theme          # Create new theme from template
   %(prog)s list                     # List available themes
   %(prog)s validate tron            # Validate theme configuration
+  %(prog)s icon tron                # Generate icon for theme
   %(prog)s clean                    # Clean build artifacts
         """
     )
@@ -213,6 +215,27 @@ Examples:
         default='python',
         help='Language for code sample'
     )
+    screenshot_parser.add_argument(
+        '--mock',
+        action='store_true',
+        help='Generate mock screenshot without opening VS Code'
+    )
+    
+    # Icon command
+    icon_parser = subparsers.add_parser(
+        'icon',
+        help='Generate theme icon',
+        description='Generate icon for a theme'
+    )
+    icon_parser.add_argument(
+        'theme',
+        help='Theme name to generate icon for'
+    )
+    icon_parser.add_argument(
+        '--output', '-o',
+        type=Path,
+        help='Output path for icon'
+    )
     
     return parser
 
@@ -358,13 +381,79 @@ def main():
             print(colored(f"✓ Created package: {output_path}", "green"))
             
         elif args.command == 'screenshot':
-            screenshot_path = builder.generate_screenshot(
-                theme_name=args.theme,
-                code_file=args.code_file,
-                language=args.language
-            )
+            # First check if theme is built
+            theme_dir = builder.output_dir / args.theme
             
-            print(colored(f"✓ Generated screenshot: {screenshot_path}", "green"))
+            if not theme_dir.exists():
+                print(colored(f"✗ Theme '{args.theme}' not built yet!", "red"))
+                print(f"\nYou need to build the theme first:")
+                print(f"  vscode-theme-gen build {args.theme}")
+                sys.exit(1)
+            
+            if args.mock:
+                # Generate mock screenshot without opening VS Code
+                print(colored("Mock screenshots are no longer supported", "yellow"))
+                print("Please use real VS Code screenshots instead")
+                sys.exit(1)
+            else:
+                # Check if VSIX exists for real screenshot
+                vsix_files = list(theme_dir.glob("*.vsix"))
+                if not vsix_files:
+                    print(colored("✗ No VSIX found. Building package first...", "yellow"))
+                    # Just package it
+                    builder.package_theme(args.theme)
+                
+                # Normal flow - open VS Code and take real screenshot
+                screenshot_path = builder.generate_screenshot(
+                    theme_name=args.theme,
+                    code_file=args.code_file,
+                    language=args.language
+                )
+            
+            if screenshot_path:
+                print(colored(f"✓ Generated screenshot: {screenshot_path}", "green"))
+            else:
+                print(colored("✗ Failed to generate screenshot - VS Code required", "red"))
+                sys.exit(1)
+                
+        elif args.command == 'icon':
+            # Generate icon for theme
+            theme_dir = builder.output_dir / args.theme
+            
+            if not theme_dir.exists():
+                print(colored(f"✗ Theme '{args.theme}' not built yet!", "red"))
+                print(f"\nBuild the theme first:")
+                print(f"  vscode-theme-gen build {args.theme}")
+                sys.exit(1)
+            
+            # Load theme data
+            theme_file = builder.themes_dir / f"{args.theme}.yaml"
+            if not theme_file.exists():
+                theme_file = builder.themes_dir / f"{args.theme}.yml"
+            
+            if not theme_file.exists():
+                print(colored(f"✗ Theme definition not found: {args.theme}", "red"))
+                sys.exit(1)
+            
+            with open(theme_file, 'r') as f:
+                theme_def = yaml.safe_load(f)
+            
+            theme_data = theme_def.get('theme', theme_def)
+            
+            # Generate icon
+            from .icon_generator import IconGenerator
+            icon_gen = IconGenerator(config)
+            
+            output_path = args.output or (theme_dir / 'images' / 'icon.png')
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            icon_path = icon_gen.generate_icon(args.theme, theme_data, theme_dir)
+            
+            if icon_path:
+                print(colored(f"✓ Generated icon: {icon_path}", "green"))
+            else:
+                print(colored("✗ Failed to generate icon", "red"))
+                sys.exit(1)
             
     except KeyboardInterrupt:
         print(colored("\n\nOperation cancelled by user", "yellow"))

@@ -8,14 +8,16 @@ from .builder import ThemeBuilder
 from .templater import Templater
 from .ai_enhancer import AIEnhancer
 from .packager import Packager
+from .icon_generator import IconGenerator
 from .constants import VERSION, THEME_SCHEMA_VERSION
 
 __version__ = VERSION
 __all__ = [
     "ThemeBuilder",
-    "Templater", 
+    "Templater",
     "AIEnhancer",
     "Packager",
+    "IconGenerator",
     "VERSION",
     "THEME_SCHEMA_VERSION",
 ]

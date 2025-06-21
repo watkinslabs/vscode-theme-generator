@@ -1,0 +1,5 @@
+Generate an 16 bit styled  icon for a theme 
+--- 
+{theme_description}
+put the word THEME across the bottom
+
