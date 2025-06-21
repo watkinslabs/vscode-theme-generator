@@ -135,6 +135,10 @@ Examples:
         description='Create a new theme and immediately build it without AI enhancement'
     )
     quickstart_parser.add_argument(
+        '--display-name',
+        help='Display name for the theme'
+    )
+    quickstart_parser.add_argument(
         'name',
         help='Theme name (use snake_case)'
     )
@@ -385,7 +389,7 @@ def main():
             print(colored(f"\n🚀 Quick starting theme: {args.name}", "cyan"))
             
             # Create theme
-            display_name = args.name.replace('_', ' ').title()
+            display_name = args.display_name
             theme_path = builder.create_theme(
                 name=args.name,
                 template=args.template,

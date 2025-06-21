@@ -1,7 +1,7 @@
 theme:
-  name: edm_vibes
-  display_name: EDM Vibes
-  description: A electirc EDM style
+  name: laser_grid
+  display_name: WL-Laser Grid
+  description: 80s grid landscape with neon lasers
   version: 1.0.0
   author:
     name: Chris Watkins
@@ -15,13 +15,13 @@ theme:
   - color-theme
   - vscode
   colors:
-    editor.background: '#181818'
-    editor.foreground: '#F5F5F5'
+    editor.background: '#0d0c1d'
+    editor.foreground: '#ffc0cb'
     editorLineNumber.foreground: '#858585'
     editorLineNumber.activeForeground: '#c6c6c6'
-    editorCursor.foreground: '#4FC3F7'
+    editorCursor.foreground: '#00ffff'
     editorCursor.background: '#000000'
-    editor.selectionBackground: '#E040FB80'
+    editor.selectionBackground: '#ff450080'
     editor.selectionForeground: '#ffffff'
     editor.inactiveSelectionBackground: '#3a3d41'
     editor.selectionHighlightBackground: '#add6ff26'
@@ -31,7 +31,7 @@ theme:
     editor.findMatchHighlightBackground: '#ea5c0055'
     editor.findRangeHighlightBackground: '#3a3d4166'
     editor.hoverHighlightBackground: '#264f7840'
-    editor.lineHighlightBackground: '#21212140'
+    editor.lineHighlightBackground: '#1a1a2e40'
     editor.lineHighlightBorder: '#282828'
     editorLink.activeForeground: '#4e94ce'
     editor.rangeHighlightBackground: '#ffffff0b'
@@ -64,37 +64,37 @@ theme:
     tab.inactiveForeground: '#969696'
     tab.unfocusedActiveForeground: '#cccccc'
     tab.unfocusedInactiveForeground: '#969696'
-    activityBar.background: '#181818'
-    activityBar.foreground: '#FF4081'
-    activityBar.inactiveForeground: '#B3B3B399'
+    activityBar.background: '#0d0c1d'
+    activityBar.foreground: '#c71585'
+    activityBar.inactiveForeground: '#ff69b499'
     activityBar.border: '#333333'
-    activityBarBadge.background: '#FF4081'
-    activityBarBadge.foreground: '#181818'
+    activityBarBadge.background: '#c71585'
+    activityBarBadge.foreground: '#0d0c1d'
     activityBar.activeBorder: '#ffffff'
     activityBar.activeBackground: '#3c3c3c'
-    sideBar.background: '#212121'
-    sideBar.foreground: '#B3B3B3'
+    sideBar.background: '#1a1a2e'
+    sideBar.foreground: '#ff69b4'
     sideBar.border: '#333333'
-    sideBarTitle.foreground: '#FF4081'
+    sideBarTitle.foreground: '#c71585'
     sideBarSectionHeader.background: '#00000000'
     sideBarSectionHeader.foreground: '#cccccc'
     sideBarSectionHeader.border: '#33333300'
-    list.activeSelectionBackground: '#E040FB'
-    list.activeSelectionForeground: '#F5F5F5'
+    list.activeSelectionBackground: '#ff4500'
+    list.activeSelectionForeground: '#ffc0cb'
     list.inactiveSelectionBackground: '#37373d'
     list.inactiveSelectionForeground: '#cccccc'
-    list.hoverBackground: '#21212180'
+    list.hoverBackground: '#1a1a2e80'
     list.hoverForeground: '#cccccc'
     list.dropBackground: '#062f4a'
     list.highlightForeground: '#0097fb'
     listFilterWidget.background: '#653723'
     listFilterWidget.outline: '#00000000'
     listFilterWidget.noMatchesOutline: '#be1100'
-    statusBar.background: '#FF4081'
-    statusBar.foreground: '#181818'
+    statusBar.background: '#c71585'
+    statusBar.foreground: '#0d0c1d'
     statusBar.border: '#007acc'
-    statusBar.debuggingBackground: '#FFAB00'
-    statusBar.debuggingForeground: '#181818'
+    statusBar.debuggingBackground: '#ffa500'
+    statusBar.debuggingForeground: '#0d0c1d'
     statusBar.debuggingBorder: '#cc6633'
     statusBar.noFolderForeground: '#ffffff'
     statusBar.noFolderBackground: '#68217a'
@@ -118,15 +118,15 @@ theme:
     menubar.selectionBackground: '#ffffff1a'
     menubar.selectionForeground: '#cccccc'
     menubar.selectionBorder: '#00000000'
-    button.background: '#FF4081'
-    button.foreground: '#181818'
-    button.hoverBackground: '#E040FB'
+    button.background: '#c71585'
+    button.foreground: '#0d0c1d'
+    button.hoverBackground: '#ff4500'
     button.secondaryBackground: '#3a3a3a'
     button.secondaryForeground: '#ffffff'
     button.secondaryHoverBackground: '#45494e'
-    input.background: '#212121'
-    input.border: '#E040FB80'
-    input.foreground: '#F5F5F5'
+    input.background: '#1a1a2e'
+    input.border: '#ff450080'
+    input.foreground: '#ffc0cb'
     input.placeholderForeground: '#a6a6a6'
     inputOption.activeBackground: '#007acc'
     inputOption.activeBorder: '#007acc'
@@ -153,30 +153,30 @@ theme:
     panelTitle.activeBorder: '#007acc'
     panelTitle.activeForeground: '#e7e7e7'
     panelTitle.inactiveForeground: '#e7e7e799'
-    terminal.background: '#0D0D0D'
-    terminal.foreground: '#ECEFF1'
+    terminal.background: '#000000'
+    terminal.foreground: '#ffffff'
     terminal.ansiBlack: '#000000'
-    terminal.ansiRed: '#FF5252'
-    terminal.ansiGreen: '#69F0AE'
-    terminal.ansiYellow: '#FFAB00'
-    terminal.ansiBlue: '#7C4DFF'
-    terminal.ansiMagenta: '#E040FB'
-    terminal.ansiCyan: '#7C4DFF'
-    terminal.ansiWhite: '#F5F5F5'
+    terminal.ansiRed: '#dc143c'
+    terminal.ansiGreen: '#00ff00'
+    terminal.ansiYellow: '#ffa500'
+    terminal.ansiBlue: '#ff007f'
+    terminal.ansiMagenta: '#ff4500'
+    terminal.ansiCyan: '#ff007f'
+    terminal.ansiWhite: '#ffc0cb'
     terminal.ansiBrightBlack: '#666666'
-    terminal.ansiBrightRed: '#FF5252'
-    terminal.ansiBrightGreen: '#69F0AE'
-    terminal.ansiBrightYellow: '#FFAB00'
-    terminal.ansiBrightBlue: '#7C4DFF'
-    terminal.ansiBrightMagenta: '#E040FB'
-    terminal.ansiBrightCyan: '#7C4DFF'
+    terminal.ansiBrightRed: '#dc143c'
+    terminal.ansiBrightGreen: '#00ff00'
+    terminal.ansiBrightYellow: '#ffa500'
+    terminal.ansiBrightBlue: '#ff007f'
+    terminal.ansiBrightMagenta: '#ff4500'
+    terminal.ansiBrightCyan: '#ff007f'
     terminal.ansiBrightWhite: '#ffffff'
     terminal.selectionBackground: '#ffffff40'
     terminalCursor.background: '#000000'
-    terminalCursor.foreground: '#4FC3F7'
-    gitDecoration.addedResourceForeground: '#69F0AE'
-    gitDecoration.modifiedResourceForeground: '#FFAB00'
-    gitDecoration.deletedResourceForeground: '#FF5252'
+    terminalCursor.foreground: '#00ffff'
+    gitDecoration.addedResourceForeground: '#00ff00'
+    gitDecoration.modifiedResourceForeground: '#ffa500'
+    gitDecoration.deletedResourceForeground: '#dc143c'
     gitDecoration.untrackedResourceForeground: '#73c991'
     gitDecoration.ignoredResourceForeground: '#8c8c8c'
     gitDecoration.conflictingResourceForeground: '#6c6cc4'
@@ -217,11 +217,11 @@ theme:
     breadcrumb.focusForeground: '#e0e0e0'
     breadcrumb.activeSelectionForeground: '#e0e0e0'
     breadcrumbPicker.background: '#252526'
-    editorError.foreground: '#FF5252'
+    editorError.foreground: '#dc143c'
     editorError.border: '#f4877100'
-    editorWarning.foreground: '#FFAB00'
+    editorWarning.foreground: '#ffa500'
     editorWarning.border: '#cca70000'
-    editorInfo.foreground: '#7C4DFF'
+    editorInfo.foreground: '#ff007f'
     editorInfo.border: '#75beff00'
     editorHint.foreground: '#eeeeeeb3'
     editorGutter.background: '#1e1e1e'
@@ -234,19 +234,19 @@ theme:
     - comment
     - punctuation.definition.comment
     settings:
-      foreground: '#727272'
+      foreground: '#808080'
       fontStyle: italic
   - name: String
     scope:
     - string
     - string.quoted
     settings:
-      foreground: '#64FFDA'
+      foreground: '#00ffff'
   - name: Number
     scope:
     - constant.numeric
     settings:
-      foreground: '#AEEA00'
+      foreground: '#ee82ee'
   - name: Keyword
     scope:
     - keyword
@@ -254,20 +254,20 @@ theme:
     - storage.type
     - storage.modifier
     settings:
-      foreground: '#3F51B5'
+      foreground: '#8a2be2'
       fontStyle: bold
   - name: Function
     scope:
     - entity.name.function
     - support.function
     settings:
-      foreground: '#D4E157'
+      foreground: '#7f00ff'
   - name: Variable
     scope:
     - variable
     - variable.other
     settings:
-      foreground: '#FF6D00'
+      foreground: '#4b0082'
   - name: Type
     scope:
     - entity.name.type
@@ -275,28 +275,28 @@ theme:
     - support.type
     - support.class
     settings:
-      foreground: '#00B0FF'
+      foreground: '#da70d6'
   - name: Constant
     scope:
     - constant
     - constant.language
     - support.constant
     settings:
-      foreground: '#3F51B5'
+      foreground: '#8a2be2'
   - name: Tag
     scope:
     - entity.name.tag
     - meta.tag
     settings:
-      foreground: '#3F51B5'
+      foreground: '#8a2be2'
   - name: Attribute
     scope:
     - entity.other.attribute-name
     settings:
-      foreground: '#FF6D00'
+      foreground: '#4b0082'
   - name: Invalid
     scope:
     - invalid
     - invalid.illegal
     settings:
-      foreground: '#FF5252'
+      foreground: '#dc143c'

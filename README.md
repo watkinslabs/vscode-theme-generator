@@ -2,6 +2,9 @@
 
 A powerful Python module for generating VS Code themes with AI enhancement, automated screenshots, and VSIX packaging.
 
+[View Theme Gallery](THEME_GALLERY.md)
+
+
 ## Features
 
 - 🎨 **Theme Generation** - Create beautiful VS Code themes from YAML definitions
