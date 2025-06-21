@@ -27,6 +27,7 @@ Examples:
   %(prog)s build tron               # Build specific theme
   %(prog)s build --no-ai            # Build without AI enhancement
   %(prog)s create my-theme          # Create new theme from template
+  %(prog)s quickstart my-theme "A cool dark theme"  # Create and build immediately without AI
   %(prog)s list                     # List available themes
   %(prog)s validate tron            # Validate theme configuration
   %(prog)s icon tron                # Generate icon for theme
@@ -123,6 +124,46 @@ Examples:
         help='Theme description'
     )
     create_parser.add_argument(
+        '--from-prompt', '-p',
+        help='Generate theme from AI prompt (e.g., "dark theme with neon cyberpunk colors")'
+    )
+    
+    # Quickstart command - NEW!
+    quickstart_parser = subparsers.add_parser(
+        'quickstart',
+        help='Create and build theme quickly without AI',
+        description='Create a new theme and immediately build it without AI enhancement'
+    )
+    quickstart_parser.add_argument(
+        'name',
+        help='Theme name (use snake_case)'
+    )
+    quickstart_parser.add_argument(
+        'description',
+        help='Theme description'
+    )
+    quickstart_parser.add_argument(
+        '--template', '-t',
+        default='default',
+        choices=['default', 'minimal', 'full'],
+        help='Template to use (default: default)'
+    )
+    quickstart_parser.add_argument(
+        '--no-screenshots',
+        action='store_true',
+        help='Skip screenshot generation'
+    )
+    quickstart_parser.add_argument(
+        '--no-icon',
+        action='store_true',
+        help='Skip icon generation'
+    )
+    quickstart_parser.add_argument(
+        '--force', '-f',
+        action='store_true',
+        help='Overwrite existing files without prompting'
+    )
+    quickstart_parser.add_argument(
         '--from-prompt', '-p',
         help='Generate theme from AI prompt (e.g., "dark theme with neon cyberpunk colors")'
     )
@@ -237,6 +278,18 @@ Examples:
         help='Output path for icon'
     )
     
+    # Organize command
+    organize_parser = subparsers.add_parser(
+        'organize',
+        help='Organize build artifacts',
+        description='Copy build artifacts to proper locations'
+    )
+    organize_parser.add_argument(
+        'theme',
+        nargs='?',
+        help='Theme name to organize (organizes all if not specified)'
+    )
+    
     return parser
 
 def main():
@@ -255,7 +308,7 @@ def main():
     logger = logging.getLogger(__name__)
     
     # Show banner for interactive commands
-    if not args.quiet and args.command in ['build', 'create']:
+    if not args.quiet and args.command in ['build', 'create', 'quickstart']:
         print_banner()
     
     # Show help if no command
@@ -267,13 +320,16 @@ def main():
         # Load configuration
         config_path = args.config if hasattr(args, 'config') else Path('config.yaml')
         
-        # For create command, we can work without config
-        if args.command == 'create' and not config_path.exists():
+        # For create and quickstart commands, we can work without config
+        if args.command in ['create', 'quickstart'] and not config_path.exists():
             # Create minimal config in memory
             config = ConfigManager({
                 'generator': {
                     'themes_dir': './themes',
                     'output_dir': './build'
+                },
+                'ai': {
+                    'enabled': False  # Disable AI for quickstart
                 }
             })
         else:
@@ -324,6 +380,63 @@ def main():
             print(f"  1. Edit {theme_path} to customize your theme")
             print(f"  2. Run 'vscode-theme-gen build {args.name}' to build")
             
+        elif args.command == 'quickstart':
+            # Quick create and build without AI
+            print(colored(f"\n🚀 Quick starting theme: {args.name}", "cyan"))
+            
+            # Create theme
+            display_name = args.name.replace('_', ' ').title()
+            theme_path = builder.create_theme(
+                name=args.name,
+                template=args.template,
+                display_name=display_name,
+                description=args.description,
+                from_prompt=args.from_prompt
+            )
+            
+            print(colored(f"✓ Created theme: {theme_path}", "green"))
+            
+            # Immediately build it
+            print(colored("\n🔨 Building theme...", "cyan"))
+            
+            # Determine what to skip
+            skip_icon = args.no_icon if hasattr(args, 'no_icon') else False
+            skip_screenshots = args.no_screenshots
+            
+            # Temporarily disable icon generation if requested
+            if skip_icon:
+                original_icon_setting = builder.config.get('build.generate_icon', True)
+                builder.config.set('build.generate_icon', False)
+            
+            themes_built = builder.build(
+                theme_name=args.name,
+                skip_ai=True,  # Always skip AI for quickstart
+                skip_screenshots=skip_screenshots,
+                skip_package=False,  # Always create package
+                force=args.force
+            )
+            
+            # Restore icon setting
+            if skip_icon:
+                builder.config.set('build.generate_icon', original_icon_setting)
+            
+            if themes_built:
+                print(colored(f"\n✅ Quick start complete!", "green", attrs=['bold']))
+                print(f"\nYour theme '{args.name}' has been created and built!")
+                print(f"\nArtifacts:")
+                print(f"  • Theme definition: {theme_path}")
+                print(f"  • Built files: {builder.output_dir / args.name}/")
+                print(f"  • VSIX package: releases/{args.name}-*.vsix")
+                if not skip_icon:
+                    print(f"  • Icon: assets/builds/{args.name}_icon.png")
+                if not skip_screenshots:
+                    print(f"  • Screenshot: assets/builds/{args.name}.png")
+                print(f"\nTo install in VS Code:")
+                print(f"  code --install-extension releases/{args.name}-*.vsix")
+            else:
+                print(colored("\n✗ Quick start failed", "red"))
+                sys.exit(1)
+                
         elif args.command == 'list':
             themes = builder.list_themes(detailed=args.detailed)
             
@@ -454,6 +567,21 @@ def main():
             else:
                 print(colored("✗ Failed to generate icon", "red"))
                 sys.exit(1)
+                
+        elif args.command == 'organize':
+            if args.theme:
+                # Organize single theme
+                theme_dir = builder.output_dir / args.theme
+                if theme_dir.exists():
+                    builder._organize_build_artifacts(args.theme, theme_dir)
+                    print(colored(f"✓ Organized artifacts for {args.theme}", "green"))
+                else:
+                    print(colored(f"✗ Theme not found: {args.theme}", "red"))
+                    sys.exit(1)
+            else:
+                # Organize all themes
+                builder.organize_all_artifacts()
+                print(colored("✓ Organized all theme artifacts", "green"))
             
     except KeyboardInterrupt:
         print(colored("\n\nOperation cancelled by user", "yellow"))
