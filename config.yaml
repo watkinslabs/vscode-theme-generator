@@ -1,0 +1,143 @@
+# VS Code Theme Generator Configuration
+generator:
+  output_dir: ./build
+  themes_dir: ./themes
+  screenshot_dir: ./screenshots
+  temp_dir: ./temp
+  
+# Theme AI enhancement settings (not the AI Manager config)
+ai:
+  enabled: true
+  
+  # Custom prompts for AI enhancement
+  prompts:
+    enhance_description: |
+      Enhance this VS Code theme description to be more engaging and descriptive.
+      Keep it concise but compelling, under 200 characters.
+      
+      Theme: {{ theme_name }}
+      Current description: {{ description }}
+      
+    optimize_colors: |
+      Review these VS Code theme colors and suggest optimizations for:
+      - Better contrast (WCAG compliance)
+      - Reduced eye strain
+      - Consistent color harmony
+      
+      Current colors: {{ colors }}
+      
+      Provide specific hex color recommendations for any issues found.
+      
+    generate_readme: |
+      Create an engaging README section for this VS Code theme:
+      Theme: {{ theme_name }}
+      Description: {{ description }}
+      Key features: {{ features }}
+
+# AI Manager configuration (watkinslabs)
+ai_manager:
+  output_dir: "./output"
+  temp_dir: "/tmp"
+  prompt_folder: "./prompts"
+  schema_folder: "./schemas"
+  max_validation_retries: 3
+  
+  openai:
+    api_key: "${OPENAI_API_KEY}"  # Set via environment variable
+    organization_id: "${OPENAI_ORG_ID}"
+    chat_model: "gpt-4"
+    tts_model: "tts-1"
+    tts_voice: "nova"
+    whisper_model: "whisper-1"
+    temperature: 0.7
+    max_tokens: 2000
+  
+  replicate:
+    api_key: "${REPLICATE_API_KEY}"  # Set via environment variable
+    image_model: "black-forest-labs/flux-pro"
+    video_model: "google/veo-2"
+    music_model: "meta/musicgen"
+    prompt_upsampling: true
+    output_format: "png"
+    num_inference_steps: 50
+    guidance_scale: 7.5
+
+build:
+  create_vsix: true
+  run_tests: false
+  generate_screenshots: true
+  clean_after_build: false
+  
+  # Screenshot configuration
+  screenshot_config:
+    window_size: [1920, 1080]
+    languages:
+      - python
+      - javascript
+      - rust
+    delay: 3  # Seconds to wait after loading theme
+    
+  # Code samples for screenshots
+  code_samples:
+    - language: python
+      file: examples/sample.py
+    - language: javascript
+      file: examples/sample.js
+    - language: rust
+      file: examples/sample.rs
+
+templates:
+  directory: ./vscode_theme_generator/templates
+  
+  # Template files
+  package_json: package.json.j2
+  readme: README.md.j2
+  changelog: CHANGELOG.md.j2
+  license: LICENSE.j2
+  theme: theme.json.j2
+  quickstart: quickstart.md.j2
+
+# Default theme settings
+defaults:
+  version: "1.0.0"
+  publisher: "unknown"
+  license: "MIT"
+  type: "dark"  # dark or light
+  
+  # Default author info (can be overridden)
+  author:
+    name: "Theme Author"
+    email: "author@example.com"
+    
+  # Default keywords
+  keywords:
+    - theme
+    - color-theme
+    - vscode
+    
+# Theme validation settings
+validation:
+  strict_mode: false
+  auto_fix: true
+  check_contrast: true
+  min_contrast_ratio: 4.5  # WCAG AA standard
+  
+# Publishing settings (for future use)
+publishing:
+  marketplace_token: ""  # Set via environment variable
+  publisher_name: ""
+  categories:
+    - Themes
+  
+# Advanced settings
+advanced:
+  parallel_builds: true
+  max_workers: 4
+  cache_ai_responses: true
+  cache_dir: ./.cache
+  
+# Logging
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+  file: ./logs/theme_generator.log
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

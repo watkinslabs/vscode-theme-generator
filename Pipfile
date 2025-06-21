@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+click = ">=8.0"
+pathlib = ">=1.0"
+selenium = ">=4.0"
+webdriver-manager = ">=3.8"
+wl-ai-manager = ">=0.1"
+wl-config-manager = ">=0.1"
+jsonschema = ">=4.17"
+requests = "*"
+termcolor = "*"
+pillow = "*"
+jinja2 = "*"
+python-dotenv = "*"
+tqdm = "*"
+pyyaml = "*"
+colorama = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"

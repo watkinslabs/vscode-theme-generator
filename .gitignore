@@ -1,0 +1,6 @@
+
+*.flort.txt
+.tar
+.gz
+.env
+

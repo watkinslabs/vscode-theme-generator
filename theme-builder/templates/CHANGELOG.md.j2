@@ -1,0 +1,34 @@
+# Change Log
+
+All notable changes to the "{{ name }}" theme will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [{{ version }}] - {{ date }}
+
+### Added
+- Initial release of {{ display_name }}
+- Complete color scheme for VS Code UI
+- Syntax highlighting for major programming languages
+- Support for popular VS Code extensions
+
+{% if changes %}
+{% for change in changes %}
+### {{ change.type }}
+{% for item in change.items %}
+- {{ item }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+## [Unreleased]
+
+### Planned
+- Additional language support
+- Theme variants (light mode, high contrast)
+- Fine-tuning based on user feedback
+
+---
+
+For more information about changes, please see the [commit history]({{ repository }}/commits/main).

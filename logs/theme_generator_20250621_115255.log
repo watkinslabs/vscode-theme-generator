@@ -1,0 +1,2 @@
+2025-06-21 11:52:55 - root - ERROR - Prompt 'generate_theme_colors' not found in available prompts.
+2025-06-21 11:52:55 - theme-builder.builder - ERROR - Failed to generate theme from prompt: No response from AI
