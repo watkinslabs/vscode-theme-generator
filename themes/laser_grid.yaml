@@ -2,7 +2,7 @@ theme:
   name: laser_grid
   display_name: WL-Laser Grid
   description: 80s grid landscape with neon lasers
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

@@ -2,7 +2,7 @@ theme:
   name: turbo_boost
   display_name: WL-Turbo Boost
   description: Racing red and white
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

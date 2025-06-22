@@ -2,7 +2,7 @@ theme:
   name: aurora_glow
   display_name: WL-Aurora Glow
   description: Northern lights soft greens
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

@@ -2,7 +2,7 @@ theme:
   name: volt_surge
   display_name: WL-Volt Surge
   description: Electric yellow lightning
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

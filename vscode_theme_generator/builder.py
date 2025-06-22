@@ -1265,3 +1265,114 @@ Make sure all colors fit the theme: {theme_description}"""
             logger.info(f"Icon URL: {assets_base_url}/{theme_name}_icon.png")
             logger.info(f"Screenshot URL: {assets_base_url}/{theme_name}.png")
         logger.info("=" * 50)
+    
+    def rebuild_package_json(self, theme_name: str, output_dir: Optional[Path] = None, rebuild_readme: bool = True) -> bool:
+        """
+        Rebuild package.json and optionally README.md for an existing theme
+        
+        Args:
+            theme_name: Name of the theme
+            output_dir: Output directory (defaults to self.output_dir / theme_name)
+            rebuild_readme: Also rebuild README.md file
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        logger.info(f"Rebuilding package.json{' and README.md' if rebuild_readme else ''} for theme: {theme_name}")
+        
+        try:
+            # Find theme file
+            theme_path = self.themes_dir / f"{theme_name}.yaml"
+            if not theme_path.exists():
+                theme_path = self.themes_dir / f"{theme_name}.yml"
+            
+            if not theme_path.exists():
+                logger.error(f"Theme definition not found: {theme_name}")
+                return False
+            
+            # Load theme definition
+            with open(theme_path, 'r') as f:
+                theme_def = yaml.safe_load(f)
+            
+            # Determine output directory
+            theme_output_dir = output_dir or (self.output_dir / theme_name)
+            
+            if not theme_output_dir.exists():
+                logger.error(f"Theme output directory not found: {theme_output_dir}")
+                return False
+            
+            # Check if icon exists (important for package.json generation)
+            icon_path = theme_output_dir / 'images' / 'icon.png'
+            if icon_path.exists():
+                logger.info(f"Found existing icon at: {icon_path}")
+            else:
+                logger.info("No icon found")
+            
+            # Extract theme data
+            theme_data = theme_def.get('theme', theme_def)
+            
+            # Apply any AI enhancements if they were previously applied
+            # (This reads from the existing theme.json to preserve any AI-enhanced descriptions)
+            theme_json_path = theme_output_dir / 'themes' / f"{theme_name}-color-theme.json"
+            if theme_json_path.exists():
+                try:
+                    with open(theme_json_path, 'r') as f:
+                        existing_theme = json.load(f)
+                    
+                    # Preserve the enhanced description if it exists
+                    if 'name' in existing_theme and existing_theme['name'] != theme_data.get('display_name'):
+                        logger.info("Preserving AI-enhanced display name from theme.json")
+                        theme_data['display_name'] = existing_theme['name']
+                except Exception as e:
+                    logger.warning(f"Could not read existing theme.json: {e}")
+            
+            # Regenerate package.json
+            self.templater._generate_package_json(theme_data, theme_output_dir)
+            logger.info(f"Successfully rebuilt package.json for {theme_name}")
+            
+            # Regenerate README.md if requested
+            if rebuild_readme:
+                logger.info("Regenerating README.md...")
+                self.templater._generate_readme(theme_data, theme_output_dir)
+                logger.info(f"Successfully rebuilt README.md for {theme_name}")
+            
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to rebuild package.json: {e}")
+            return False
+    
+    def rebuild_all_package_json(self, force: bool = False, rebuild_readme: bool = True) -> Dict[str, bool]:
+        """
+        Rebuild package.json and optionally README.md for all themes
+        
+        Args:
+            force: Rebuild even if files haven't changed
+            rebuild_readme: Also rebuild README.md files
+            
+        Returns:
+            Dictionary of theme_name: success status
+        """
+        results = {}
+        
+        # Get all built themes
+        if not self.output_dir.exists():
+            logger.warning("Output directory doesn't exist")
+            return results
+        
+        for theme_dir in self.output_dir.iterdir():
+            if theme_dir.is_dir() and (theme_dir / 'package.json').exists():
+                theme_name = theme_dir.name
+                logger.info(f"Rebuilding files for: {theme_name}")
+                
+                success = self.rebuild_package_json(theme_name, rebuild_readme=rebuild_readme)
+                results[theme_name] = success
+        
+        # Summary
+        successful = sum(1 for success in results.values() if success)
+        failed = len(results) - successful
+        
+        files_rebuilt = "package.json" + (" and README.md" if rebuild_readme else "")
+        logger.info(f"Rebuilt {files_rebuilt} files: {successful} successful, {failed} failed")
+        
+        return results

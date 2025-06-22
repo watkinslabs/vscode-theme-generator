@@ -6,7 +6,7 @@ generator:
   temp_dir: ./temp
   assets_dir: "./assets/builds"
   releases_dir: "./releases"
-  assets_base_url: "https://github.com/watkinslabs/vscode-theme-generator/assets/builds"  # Or wherever you're hosting
+  assets_base_url: "https://raw.githubusercontent.com/watkinslabs/vscode-theme-generator/main/assets/builds" 
 
 # Theme AI enhancement settings (not the AI Manager config)
 ai:

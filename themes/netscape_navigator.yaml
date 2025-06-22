@@ -2,7 +2,7 @@ theme:
   name: netscape_navigator
   display_name: Netscape Navigator
   description: Bright teal and gray 90s browser aesthetic
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

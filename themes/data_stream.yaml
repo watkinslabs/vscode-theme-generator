@@ -2,7 +2,7 @@ theme:
   name: data_stream
   display_name: WL-Data Stream
   description: Binary blue and white
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

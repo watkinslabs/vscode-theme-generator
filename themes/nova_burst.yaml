@@ -2,7 +2,7 @@ theme:
   name: nova_burst
   display_name: WL-Nova Burst
   description: Exploding star colors
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

@@ -2,7 +2,7 @@ theme:
   name: velvet_night
   display_name: WL-Velvet Night
   description: Deep purple velvet darkness
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

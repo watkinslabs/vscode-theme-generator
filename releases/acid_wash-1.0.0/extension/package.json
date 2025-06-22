@@ -1,0 +1,43 @@
+{
+  "name": "acid-wash",
+  "displayName": "WL-Acid Wash",
+  "description": "Bright psychedelic colors",
+  "version": "1.0.0",
+  "publisher": "WatkinsLabs",
+  "author": {
+    "name": "Chris Watkins",
+    "email": "chris@watkinslabs.com",
+    "url": "https://watkinslabs.com"  },
+"icon": "images/icon.png",  
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": ["Themes"],
+  "keywords": [
+  "theme",
+  "color-theme",
+  "vscode"
+],
+"repository": {
+    "type": "git",
+    "url": "https://github.com/watkinslabs/vscode-theme-generator"
+  },  "contributes": {
+    "themes": [
+      {
+        "label": "WL-Acid Wash",
+        "uiTheme": "vs-dark",
+        "path": "./themes/acid_wash-color-theme.json"
+      }
+    ]
+  },
+  "scripts": {
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "__metadata": {
+    "id": "acid-wash-theme-WatkinsLabs",
+    "publisherDisplayName": "Chris Watkins",
+    "publisherId": "WatkinsLabs"
+  }
+}

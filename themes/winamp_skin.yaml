@@ -2,7 +2,7 @@ theme:
   name: winamp_skin
   display_name: Winamp Classic
   description: Vibrant Winamp player skin with metallic silver and electric blue
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

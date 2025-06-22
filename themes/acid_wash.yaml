@@ -2,7 +2,7 @@ theme:
   name: acid_wash
   display_name: WL-Acid Wash
   description: Bright psychedelic colors
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

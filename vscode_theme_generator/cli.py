@@ -31,6 +31,8 @@ Examples:
   %(prog)s list                     # List available themes
   %(prog)s validate tron            # Validate theme configuration
   %(prog)s icon tron                # Generate icon for theme
+  %(prog)s rebuild-package tron     # Rebuild package.json for theme
+  %(prog)s rebuild-package --all    # Rebuild all package.json files
   %(prog)s clean                    # Clean build artifacts
         """
     )
@@ -294,6 +296,39 @@ Examples:
         help='Theme name to organize (organizes all if not specified)'
     )
     
+       # Add rebuild-package command (add this after the other subparsers)
+    rebuild_package_parser = subparsers.add_parser(
+        'rebuild-package',
+        help='Rebuild package.json for theme(s)',
+        description='Regenerate package.json from theme YAML definition'
+    )
+    rebuild_package_parser.add_argument(
+        'theme',
+        nargs='?',
+        help='Theme name to rebuild package.json for (omit to rebuild all)'
+    )
+    rebuild_package_parser.add_argument(
+        '--all', '-a',
+        action='store_true',
+        help='Rebuild package.json for all themes'
+    )
+    rebuild_package_parser.add_argument(
+        '--output', '-o',
+        type=Path,
+        help='Output directory (defaults to build/theme_name)'
+    )
+    rebuild_package_parser.add_argument(
+        '--force', '-f',
+        action='store_true',
+        help='Overwrite existing package.json without prompting'
+    )
+    rebuild_package_parser.add_argument(
+        '--update-vsix',
+        action='store_true',
+        help='Also recreate VSIX packages after updating package.json'
+    )
+    
+
     return parser
 
 def main():
@@ -586,7 +621,154 @@ def main():
                 # Organize all themes
                 builder.organize_all_artifacts()
                 print(colored("✓ Organized all theme artifacts", "green"))
-            
+        elif args.command == 'rebuild-package':
+            if args.all or not args.theme:
+                # Rebuild all themes
+                print(colored("\n🔧 Rebuilding package.json for all themes...", "cyan"))
+                
+                # Get all built themes
+                built_themes = []
+                if builder.output_dir.exists():
+                    for theme_dir in builder.output_dir.iterdir():
+                        if theme_dir.is_dir() and (theme_dir / 'package.json').exists():
+                            built_themes.append(theme_dir.name)
+                
+                if not built_themes:
+                    print(colored("✗ No built themes found", "red"))
+                    sys.exit(1)
+                
+                print(f"Found {len(built_themes)} built theme(s)")
+                
+                if not args.force:
+                    response = input(f"\nRebuild package.json for all {len(built_themes)} themes? [y/N]: ")
+                    if response.lower() != 'y':
+                        print(colored("Operation cancelled", "yellow"))
+                        sys.exit(0)
+                
+                # Rebuild all
+                results = builder.rebuild_all_package_json(force=args.force)
+                
+                # Show results
+                successful = [name for name, success in results.items() if success]
+                failed = [name for name, success in results.items() if not success]
+                
+                if successful:
+                    print(colored(f"\n✓ Successfully rebuilt {len(successful)} package.json files:", "green"))
+                    for name in successful:
+                        print(f"  • {name}")
+                
+                if failed:
+                    print(colored(f"\n✗ Failed to rebuild {len(failed)} package.json files:", "red"))
+                    for name in failed:
+                        print(f"  • {name}")
+                
+                # Update VSIX if requested
+                if args.update_vsix and successful:
+                    print(colored("\n📦 Updating VSIX packages...", "cyan"))
+                    for theme_name in successful:
+                        try:
+                            theme_dir = builder.output_dir / theme_name
+                            vsix_path = builder.packager.create_vsix(theme_dir)
+                            print(colored(f"  ✓ {theme_name}: {vsix_path.name}", "green"))
+                        except Exception as e:
+                            print(colored(f"  ✗ {theme_name}: {e}", "red"))
+                
+            else:
+                # Rebuild single theme
+                theme_name = args.theme
+                
+                # Check if theme exists
+                theme_file = builder.themes_dir / f"{theme_name}.yaml"
+                if not theme_file.exists():
+                    theme_file = builder.themes_dir / f"{theme_name}.yml"
+                
+                if not theme_file.exists():
+                    print(colored(f"✗ Theme definition not found: {theme_name}", "red"))
+                    print(f"\nLooked for:")
+                    print(f"  - {builder.themes_dir / f'{theme_name}.yaml'}")
+                    print(f"  - {builder.themes_dir / f'{theme_name}.yml'}")
+                    sys.exit(1)
+                
+                # Determine output directory
+                output_dir = args.output or (builder.output_dir / theme_name)
+                
+                if not output_dir.exists():
+                    print(colored(f"✗ Theme build directory not found: {output_dir}", "red"))
+                    print(f"\nYou may need to build the theme first:")
+                    print(f"  vscode-theme-gen build {theme_name}")
+                    sys.exit(1)
+                
+                # Check if package.json exists
+                package_json_path = output_dir / 'package.json'
+                if package_json_path.exists() and not args.force:
+                    # Show current package.json info
+                    try:
+                        with open(package_json_path, 'r') as f:
+                            current_pkg = json.load(f)
+                        print(f"\nCurrent package.json:")
+                        print(f"  Name: {current_pkg.get('name', 'N/A')}")
+                        print(f"  Version: {current_pkg.get('version', 'N/A')}")
+                        print(f"  Display Name: {current_pkg.get('displayName', 'N/A')}")
+                    except:
+                        pass
+                    
+                    response = input(f"\nOverwrite existing package.json? [y/N]: ")
+                    if response.lower() != 'y':
+                        print(colored("Operation cancelled", "yellow"))
+                        sys.exit(0)
+                
+                # Rebuild package.json
+                print(colored(f"\n🔧 Rebuilding package.json for theme: {theme_name}", "cyan"))
+                
+                success = builder.rebuild_package_json(theme_name, output_dir)
+                
+                if success:
+                    print(colored(f"✓ Successfully rebuilt package.json", "green"))
+                    print(f"\nRebuilt: {package_json_path}")
+                    
+                    # Show new package.json info
+                    try:
+                        with open(package_json_path, 'r') as f:
+                            new_pkg = json.load(f)
+                        print(f"\nNew package.json:")
+                        print(f"  Name: {new_pkg.get('name', 'N/A')}")
+                        print(f"  Version: {new_pkg.get('version', 'N/A')}")
+                        print(f"  Display Name: {new_pkg.get('displayName', 'N/A')}")
+                        if new_pkg.get('icon'):
+                            print(f"  Icon: {new_pkg.get('icon')}")
+                    except:
+                        pass
+                    
+                    # Check if we need to recreate VSIX
+                    vsix_files = list(output_dir.glob("*.vsix"))
+                    if vsix_files:
+                        if args.update_vsix:
+                            print(colored("\n📦 Updating VSIX package...", "cyan"))
+                            try:
+                                vsix_path = builder.packager.create_vsix(output_dir)
+                                print(colored(f"✓ Updated VSIX: {vsix_path.name}", "green"))
+                                
+                                # Copy to releases if configured
+                                releases_dir = Path(builder.config.get('generator.releases_dir', './releases'))
+                                if releases_dir.exists():
+                                    import shutil
+                                    version = new_pkg.get('version', '1.0.0')
+                                    release_path = releases_dir / f"{theme_name}-{version}.vsix"
+                                    shutil.copy2(vsix_path, release_path)
+                                    print(colored(f"✓ Copied to releases: {release_path.name}", "green"))
+                            except Exception as e:
+                                print(colored(f"✗ Failed to update VSIX: {e}", "red"))
+                        else:
+                            print(colored("\n⚠ Note: You have VSIX files that may need updating:", "yellow"))
+                            for vsix in vsix_files:
+                                print(f"  - {vsix.name}")
+                            print("\nTo update the VSIX with new package.json:")
+                            print(f"  vscode-theme-gen package {theme_name}")
+                            print("\nOr rebuild with --update-vsix flag:")
+                            print(f"  vscode-theme-gen rebuild-package {theme_name} --update-vsix")
+                else:
+                    print(colored(f"✗ Failed to rebuild package.json", "red"))
+                    sys.exit(1)    
     except KeyboardInterrupt:
         print(colored("\n\nOperation cancelled by user", "yellow"))
         sys.exit(130)

@@ -2,7 +2,7 @@ theme:
   name: plasma_storm
   display_name: WL-Plasma Storm
   description: Electric purple plasma energy
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

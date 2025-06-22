@@ -2,7 +2,7 @@ theme:
   name: tng
   display_name: Startrek Tng Vibes Theme
   description: 'Theme inspired by: Startrek TNG  vibes'
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

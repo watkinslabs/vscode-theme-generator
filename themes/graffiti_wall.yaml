@@ -2,7 +2,7 @@ theme:
   name: graffiti_wall
   display_name: WL-Graffiti Wall
   description: Street art vibrant spray
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

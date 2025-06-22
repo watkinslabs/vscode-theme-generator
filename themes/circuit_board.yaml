@@ -2,7 +2,7 @@ theme:
   name: circuit_board
   display_name: WL-Circuit Board
   description: Green PCB traces on black
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

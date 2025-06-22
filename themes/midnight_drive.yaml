@@ -2,7 +2,7 @@ theme:
   name: midnight_drive
   display_name: WL-Midnight Drive
   description: Dark highway with neon street lights
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

@@ -2,7 +2,7 @@ theme:
   name: ms_paint_98
   display_name: MS Paint 98
   description: Windows 98 Paint bright primary colors
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

@@ -2,7 +2,7 @@ theme:
   name: electric_sunset
   display_name: WL-Electric Sunset
   description: Vibrant orange and purple twilight
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

@@ -2,7 +2,7 @@ theme:
   name: vacuum_glow
   display_name: WL-Vacuum Glow
   description: Warm tube amplifier orange
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

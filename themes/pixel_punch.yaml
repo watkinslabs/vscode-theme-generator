@@ -2,7 +2,7 @@ theme:
   name: pixel_punch
   display_name: WL-Pixel Punch
   description: Vibrant pixel art colors
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

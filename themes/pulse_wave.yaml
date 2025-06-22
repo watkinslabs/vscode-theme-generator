@@ -2,7 +2,7 @@ theme:
   name: pulse_wave
   display_name: WL-Pulse Wave
   description: Rhythmic color pulses
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

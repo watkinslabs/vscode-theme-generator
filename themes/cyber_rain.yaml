@@ -2,7 +2,7 @@ theme:
   name: cyber_rain
   display_name: WL-Cyber Rain
   description: Digital rain in electric blue
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

@@ -2,7 +2,7 @@ theme:
   name: disco_ball
   display_name: WL-Disco Ball
   description: Sparkly mirror ball reflections
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

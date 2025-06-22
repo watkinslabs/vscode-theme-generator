@@ -2,7 +2,7 @@ theme:
   name: retro_arcade
   display_name: WL-Retro Arcade
   description: Bright cabinet glow aesthetic
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

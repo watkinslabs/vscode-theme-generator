@@ -2,7 +2,7 @@ theme:
   name: solar_flare
   display_name: WL-Solar Flare
   description: Explosive orange and yellow
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

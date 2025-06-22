@@ -2,7 +2,7 @@ theme:
   name: ink_splash
   display_name: WL-Ink Splash
   description: Bold ink on paper
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

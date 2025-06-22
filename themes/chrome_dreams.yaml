@@ -2,7 +2,7 @@ theme:
   name: chrome_dreams
   display_name: WL-Chrome Dreams
   description: Metallic chrome reflections with purple highlights
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com

@@ -2,7 +2,7 @@ theme:
   name: tape_deck
   display_name: WL-Tape Deck
   description: Cassette brown and silver
-  version: 1.0.0
+  version: 1.0.1
   author:
     name: Chris Watkins
     email: chris@watkinslabs.com
